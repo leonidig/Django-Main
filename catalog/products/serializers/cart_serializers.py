@@ -1,37 +1,29 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from product_serializers import ProductSerializer
+from .product_serializers import ProductSerializer
+
 from ..models import Cart, CartItem
 
-
-class CartItemSerizlizer(serializers.ModelSerializer):
+class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
-    item = serializers.SerializerMethodField()
-
+    item_total = serializers.SerializerMethodField()
     def get_item_total(self, obj):
         return obj.item_total
-
+    
     class Meta:
-        model = CartItem
-        fields = ['cart',
-                  'product',
-                  'item_total',
-                  'amount'
-                ]
+        fields = ['cart', 'product', 'amount', 'item_total']
         
-
 class CartSerializer(serializers.ModelSerializer):
-    items = CartItemSerizlizer(source="items", many=True)
-
-    def get_total(self, obj):
-        return sum([item.item_total for item in obj.items.all()])
-
+    items = CartItemSerializer(source="items", many=True)
+    total = serializers.ReadOnlyField()
+    
     class Meta:
         model = Cart
-        fields = [
-            "user",
-            "items",
-            "created_at",
-            "total"
-        ]
+        fields = ["user", "created_at", "items", "total"]
+        
+    def get_total(self, obj):
+        return sum([item.item_total for item in obj.items.all()])
+        
+    
+    
     

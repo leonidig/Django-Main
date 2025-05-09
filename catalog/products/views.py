@@ -2,13 +2,16 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import F, ExpressionWrapper, FloatField
 from django.conf import settings
 from django.contrib import messages
+from rest_framework import viewsets, filters
 
 from .models import Product, Category, Cart, CartItem, Order, OrderItem, Payment
 from .forms import OrderCreateForm
 from utils.email import send_order_confirmation_email
 
+
 def calculate_discount(value, arg):
     return round((value * arg / 100), 2)
+
 
 def index(request):
     products = Product.objects.all()

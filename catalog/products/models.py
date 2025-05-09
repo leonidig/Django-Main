@@ -31,7 +31,7 @@ class Product(models.Model):
     rating = models.FloatField(default=0.0)
     attributes = models.JSONField(default=dict, null=True)
     price = models.IntegerField(default=0)
-    discount = models.IntegerField(default=0, max=100)
+    discount = models.IntegerField(default=0)
     
     @property
     def discount_price(self):

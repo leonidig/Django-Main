@@ -4,11 +4,13 @@ from rest_framework.routers import DefaultRouter
 from .views import index, about, product_details, cart_add, cart_detail, cart_delete, checkout
 from ._views.product import ProductViewSet
 from ._views.category import CaregoryViewSet
+from ._views.cart import CartViewSet
 app_name = 'products'
 
 router = DefaultRouter()
 router.register(prefix=r"products", viewset=ProductViewSet)
 router.register(prefix=r"categories", viewset=CaregoryViewSet)
+router.register(prefix=r"carts", viewset=CartViewSet)
 
 
 urlpatterns = [

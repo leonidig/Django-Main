@@ -4,9 +4,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from ..models import Cart, Product, CartItem
+from utils.email import send_order_confirmation_email
+from .. models import Cart, CartItem, Product, OrderItem, Payment, Order
 from ..serializers.cart_serializers import CartSerializer, CartItemSerializer
 from ..serializers.product_serializers import ProductSerializer
+from ..forms import OrderCreateForm
 
 
 
@@ -72,3 +74,66 @@ class CartViewSet(ViewSet):
                 })
                 total += item_total
             return Response({"user": request.user, "created_at": None, "items": items, "total": total})
+
+
+    @action(detail=False, methods=['post'], url_path='cart-checkout/')
+    def checkout(self, request):
+        if request.user.is_authenticated:
+            cart = request.user.cart
+            if not cart or cart.items.count() == 0:
+                return Response({"error":"Cart is empty"}, status=400)
+            
+        else:
+            cart = request.session.get(settings.CART_SESSION_ID, default={})
+            if not cart:
+                return Response({"error":"Cart is empty"}, status=400)
+            
+        form = OrderCreateForm(request.data)
+        
+        if not form.is_valid():
+            return Response({"errors":form.errors}, status=400)
+        
+        order = form.save(commit=False)
+        
+        if request.user.is_authenticated:
+            order.user = request.user
+            
+        order.save()
+        
+        if request.user.is_authenticated:
+            cart_items = order.user.cart.items.select_related("product").all()
+            items = OrderItem.objects.bulk_create([OrderItem(order=order, 
+                                                            product=item.product, 
+                                                            amount=item.amount, 
+                                                            price=item.discount_price or item.price) 
+                                                            for item in cart_items]
+                                                            )
+        
+        else:
+            cart_items = [{"product":Product.objects.get(id=int(p_id)), "amount":a} for p_id, a in cart.items()]
+            items = OrderItem.objects.bulk_create([OrderItem(order=order, 
+                                                            product=item["product"], 
+                                                            amount=item["amount"], 
+                                                            price=item["product"].discount_price or item["product"].price) 
+                                                            for item in cart_items]
+                                                            )
+        
+        method = form.cleaned_data["payment_method"]
+        total = sum(item.item_total for item in items)
+        
+        if method != "cash":
+            Payment.objects.create(order=order, provider=method, amount=total)
+            
+        else:
+            order.status = Order.Status.PROCESSING
+            order.save()
+        
+        if request.user.is_authenticated:
+            request.user.cart.items.all().delete()
+            
+        else: 
+            cart.clear()
+        
+        send_order_confirmation_email(order=order)
+        
+        return Response({"message": f"Order {order.id} is created"}, status=200)

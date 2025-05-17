@@ -17,6 +17,7 @@ from ..models import Profile
 from utils.email import send_email_confirm
 from products.models import Cart, Product, CartItem
 from utils.email import send_email_confirm
+from serializers.profile_serializer import ProfileSerializer, UserSerializer
 
 
 class AccountViewSet(ViewSet):
@@ -64,4 +65,53 @@ class AccountViewSet(ViewSet):
             return Response({"eror":'Incorrect login or password'}, status=400)
         
 
-    @action(detail=True, methods=['post'],)
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def logout_view(self, request):
+        logout(request)
+        return Response({'message': 'Successful logout'}, status=200)
+    
+
+    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
+    def profile_view(self, request):
+        profile = request.user.profile
+        data = ProfileSerializer(profile).data
+        return Response({'results': data}, status=200)
+    
+
+    @action(detail=True, methods=['put'], permission_classes=[IsAuthenticated])
+    def edit_profile(self, request):
+        profile = request.user.profile
+        form = ProfileUpdateForm(request.data, request.FILES, user=request.user)
+
+        if form.is_valid():
+            new_email = form.data.get('cleaned_data')
+            if new_email != request.user.email:
+                send_email_confirm(request, request.user, new_email)
+            
+            avatar = form.cleaned_data.get('avatar')
+            if avatar:
+                profile.avatar = avatar
+            profile.save()
+            return Response({'results': ProfileSerializer(profile).data}, status=200)
+    
+        else:
+            return Response(form.errors, status=400)
+        
+
+    @action(detail=True, methods=['get'])
+    def confirm_email(self, request):
+        user_id = request.GET.get('user')
+        new_email = request.GET.get('email')
+        if not user_id or not new_email:
+            return Response({'error': 'Invalid url'}, status=400)
+        try:
+            user = User.objects.get(id = user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=404)
+        if user.is_active and User.objects.filter(email=new_email).exists():
+            return Response({'error': 'This email is already used'}, status=400)
+        
+        user.email = new_email
+        user.is_active = True
+        user.save()
+        return Response({'results': UserSerializer(user).data}, status=200)

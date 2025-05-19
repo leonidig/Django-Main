@@ -6,13 +6,14 @@ from rest_framework.decorators import action
 
 from utils.email import send_order_confirmation_email
 from ..models import Cart, CartItem, Product, OrderItem, Payment, Order
-from ..serializers.cart_serializers import CartSerializer, CartItemSerializer
+from ..serializers.cart_serializers import CartSerializer
 from ..serializers.product_serializers import ProductSerializer
 from ..forms import OrderCreateForm
 
 
 class CartViewSet(ViewSet):
     queryset = Cart.objects.all()
+    serializer_class = CartSerializer
 
     @action(detail=True, methods=["post"], url_path="add-product<product_id>/")
     def add(self, request, product_id=None):

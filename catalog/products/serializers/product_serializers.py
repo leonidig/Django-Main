@@ -30,7 +30,3 @@ class ProductSerializer(serializers.ModelSerializer):
     @extend_schema_field(OpenApiTypes.FLOAT)
     def get_discount_price(self, obj):
         return obj.discount_price
-
-    def clean_price(self, value):
-
-        raise serializers.ValidationError("")

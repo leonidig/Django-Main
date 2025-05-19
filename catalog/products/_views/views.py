@@ -4,8 +4,8 @@ from django.conf import settings
 from django.contrib import messages
 from rest_framework import viewsets, filters
 
-from .models import Product, Category, Cart, CartItem, Order, OrderItem, Payment
-from .forms import OrderCreateForm
+from ..models import Product, Category, Cart, CartItem, Order, OrderItem, Payment
+from ..forms import OrderCreateForm
 from utils.email import send_order_confirmation_email
 
 

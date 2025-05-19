@@ -11,13 +11,17 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("products.urls", namespace="products")),
     path("", include("accounts.urls", namespace="accounts")),
-    path("captcha/", include("captcha.urls"))
+    path("captcha/", include("captcha.urls")),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += [
-        path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-        path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+        path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+        path(
+            "api/docs/",
+            SpectacularSwaggerView.as_view(url_name="schema"),
+            name="swagger-ui",
+        ),
         # path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     ]

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load math_filters %}
+{% load static %}
 
 {% block content %}
 <div class="container mt-3" style="padding-top: 60px; padding-bottom:60px;">
@@ -9,7 +10,11 @@
             {% for product in products %}
                 <div class="col">
                     <div class="card h-100 shadow-sm">
-                        <img src="{{ product.image_path|default:'https://i0.wp.com/junilearning.com/wp-content/uploads/2020/06/python-programming-language.webp?fit=800%2C800&ssl=1' }}"
+                        <img src="{% if product.image_path %}
+                        {{ product.image_path }}
+                        {% else %}
+                        {% static 'images/dimon.jpg' %} 
+                        {% endif %}"
                         alt="{{product.name}}" class="card-img-top" style="width: 100px; height: 100px;">
                         <div class="card-body">
                             {% if not product.available %}

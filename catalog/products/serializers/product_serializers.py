@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from drf_spectacular.utils import extend_schema_field, OpenApiTypes
 from rest_framework import serializers
-from rest_framework.validators import va
 
 from ..models import Product
 

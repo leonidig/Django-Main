@@ -11,6 +11,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, OpenApiTypes
 
 from ..forms import RegisterForm, ProfileUpdateForm, RegisterFormNoCaptcha, LoginForm
 from ..models import Profile
@@ -24,6 +25,10 @@ class AccountViewSet(ViewSet):
     permission_classes = AllowAny
 
     @action(detail=True, methods=["post"])
+    @extend_schema(
+        request=RegisterForm,
+        responses={201: OpenApiTypes.OBJECT, 400: OpenApiTypes.OBJECT},
+    )
     def register(self, request):
         form = RegisterForm(request.data)
 

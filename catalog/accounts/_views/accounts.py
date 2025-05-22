@@ -18,17 +18,18 @@ from ..models import Profile
 from utils.email import send_email_confirm
 from products.models import Cart, Product, CartItem
 from utils.email import send_email_confirm
-from ..serializers import ProfileSerializer, UserSerializer
+from ..serializers import ProfileSerializer, UserSerializer, RegisterFormSerializer
 
 
 class AccountViewSet(ViewSet):
-    permission_classes = AllowAny
+    permission_classes = [AllowAny]
+    serializer_class = UserSerializer
 
-    @action(detail=True, methods=["post"])
     @extend_schema(
-        request=RegisterForm,
+        request=RegisterFormSerializer,
         responses={201: OpenApiTypes.OBJECT, 400: OpenApiTypes.OBJECT},
     )
+    @action(detail=False, methods=["post"])
     def register(self, request):
         form = RegisterForm(request.data)
 
@@ -43,7 +44,7 @@ class AccountViewSet(ViewSet):
         else:
             return Response({"errors": form.errors}, status=400)
 
-    @action(detail=True, methods=["post"])
+    @action(detail=False, methods=["post"])
     def login(self, request):
         form = LoginForm(request.data)
 
@@ -77,18 +78,18 @@ class AccountViewSet(ViewSet):
 
             return Response({"eror": "Incorrect login or password"}, status=400)
 
-    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=["post"], permission_classes=[IsAuthenticated])
     def logout_view(self, request):
         logout(request)
         return Response({"message": "Successfully logout"})
 
-    @action(detail=True, methods=["get"], permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
     def profile_view(self, request):
         profile = request.user.profile
         data = ProfileSerializer(profile).data
         return Response({"results": data})
 
-    @action(detail=True, methods=["put"], permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=["put"], permission_classes=[IsAuthenticated])
     def edit_profile(self, request):
         profile = request.user.profile
         form = ProfileUpdateForm(request.data, request.FILES, user=request.user)
@@ -108,7 +109,7 @@ class AccountViewSet(ViewSet):
         else:
             return Response(form.errors, status=400)
 
-    @action(detail=True, methods=["get"])
+    @action(detail=False, methods=["get"])
     def confirm_email(self, request):
         user_id = request.GET.get("user")
         new_email = request.GET.get("email")

@@ -19,8 +19,8 @@ from ._views import AccountViewSet
 
 app_name = "accounts"
 
-# router = DefaultRouter()
-# router.register(prefix=r"accounts", viewset=AccountViewSet, basename="accounts")
+router = DefaultRouter()
+router.register(prefix=r"accounts", viewset=AccountViewSet, basename="accounts")
 
 
 urlpatterns = [
@@ -76,4 +76,4 @@ urlpatterns = [
     ),
 ]
 
-# urlpatterns += router.urls
+urlpatterns += router.urls

@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 urlpatterns = [
@@ -24,4 +25,6 @@ if settings.DEBUG:
             name="swagger-ui",
         ),
         # path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+        path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+        path("api/refresh/", TokenObtainPairView.as_view(), name="token_refresh"),
     ]

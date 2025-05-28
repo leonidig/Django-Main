@@ -11,18 +11,21 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['name',
-                'description',
-                'price',
-                'available',
-                'category',
-                'nomenclature',
-                'created_at',
-                'rating',
-                'discount',
-                'attributes',
-                'discount_price'
-                ]
+        fields = [
+            "id",
+            "name",
+            "description",
+            "stock",
+            "price",
+            "available",
+            "category",
+            "nomenclature",
+            "created_at",
+            "rating",
+            "discount",
+            "attributes",
+            "discount_price",
+        ]
 
     @extend_schema_field(OpenApiTypes.FLOAT)
     def get_discount_price(self, obj):

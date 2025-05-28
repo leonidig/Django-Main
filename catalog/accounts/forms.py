@@ -1,8 +1,11 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from captcha.fields import CaptchaField
+
+from .serializers import CaptchaFieldSerializer
+
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -34,3 +37,8 @@ class RegisterFormNoCaptcha(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(required=True, label="Login:")
+    password = forms.CharField(widget=forms.PasswordInput(), required=True, label="Password:")

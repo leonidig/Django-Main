@@ -15,7 +15,6 @@ class CartViewSet(ViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 
-
     @action(detail=True, methods=["post"], url_path="add-product")
     def add(self, request, product_id=None):
         product = get_object_or_404(Product, id=product_id)

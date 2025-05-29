@@ -15,19 +15,6 @@ class RegisterForm(UserCreationForm):
         model = User
         extra_fields = ["email"]
         fields = ["username", "password1", "password2"]
-
-
-class ProfileUpdateForm(forms.Form):
-    email = forms.EmailField(label="Email:")
-    avatar = forms.ImageField(required=False, label="Avatar:")
-
-=======
-    captcha = CaptchaField()
-    
-    class Meta:
-        model = User
-        extra_fields = ['email']
-        fields = ['username', "password1", "password2"]
         
 class ProfileUpdateForm(forms.Form):
     email = forms.EmailField(label="Email:")

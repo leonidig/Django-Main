@@ -76,56 +76,12 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-=======
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'products.apps.ProductsConfig',
-    'accounts.apps.AccountsConfig',
-    'captcha',
-    'rest_framework',
-    'drf_spectacular',
-    "django_filters",
-    'corsheaders',
-    'rest_framework_simplejwt'
-]
-
-
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware'
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-ROOT_URLCONF = 'catalog.urls'
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
->>>>>>> c5ba0512cfce445d739021ab69bde94b63df42e0
             ],
         },
     },
 ]
 
-
-WSGI_APPLICATION = 'catalog.wsgi.application'
+WSGI_APPLICATION = "catalog.wsgi.application"
 
 
 # Database
@@ -135,9 +91,6 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -157,17 +110,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    }
+    },
 ]
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
+LANGUAGE_CODE = "en-us"
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -177,17 +129,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-
-STATIC_URL = 'static/'
-MEDIA_URL = 'media/'
+STATIC_URL = "static/"
+MEDIA_URL = "media/"
 # MEDIA_URL = '../media/'
 MEDIA_ROOT = f"{BASE_DIR}/media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
@@ -203,8 +153,6 @@ DEFAULT_FROM_EMAIL = "noreply@gmail.com"
 CART_SESSION_ID = "cart"
 
 
-
->>>>>>> c5ba0512cfce445d739021ab69bde94b63df42e0
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -220,8 +168,6 @@ REST_FRAMEWORK = {
         "rest_framework.filters.OrderingFilter",
         "rest_framework.filters.SearchFilter",
     ],
-
-
 }
 
 SPECTACULAR_SETTINGS = {
@@ -231,18 +177,11 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
-
-
-
-# CORS_ALLOWED_ORIGINS = ["*"]
-
-
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 
 
 SIMPLE_JWT = {
-
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }

@@ -2,11 +2,11 @@ from django.contrib.auth.models import User
 from drf_spectacular.utils import extend_schema_field, OpenApiTypes
 from rest_framework import serializers
 
-from ..models import Product
+from ..models import Product, Category
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(read_only=True)
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
     discount_price = serializers.SerializerMethodField()
 
     class Meta:
@@ -30,3 +30,7 @@ class ProductSerializer(serializers.ModelSerializer):
     @extend_schema_field(OpenApiTypes.FLOAT)
     def get_discount_price(self, obj):
         return obj.discount_price
+
+    def clean_price(self, value):
+        if value < 0:
+            return serializers.ValidationError('Error')

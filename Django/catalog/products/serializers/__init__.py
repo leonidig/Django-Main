@@ -1,4 +1,0 @@
-from .cart_serializers import CartItemSerializer, CartSerializer
-from .category_serializers import CategorySerializer
-from .order_serializers import OrderItemSerializer, OrderSerializer
-from .product_serializers import ProductSerializer

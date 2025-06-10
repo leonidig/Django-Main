@@ -54,3 +54,24 @@ def test_product_serializer_invalid(category):
     for field in data.keys():
         assert field in serializer.errors
     
+
+
+@pytest.mark.django_db
+def test_product_serializer_read_only(category):
+    data = {
+        "name": "test_name",
+        "description": "test_description",
+        "stock":3,
+        "price":100,
+        "available": True,
+        "category": category,
+        "nomenclature":"test_nomenclature",
+        "rating":2,
+        "discount":10,
+        "attributes": {}
+    }
+    
+    serializer = ProductSerializer(data=data)
+    
+    assert serializer.is_valid()
+    assert 'category' not in serializer.data.keys()
